@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: tech.aaregall.lab:aws-spring-cloud-function-kotlin-reactive-sample
+
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL # API Gateway regional endpoints
+  Function:
+    Timeout: 20
+    MemorySize: 1512
+    Runtime: provided.al2
+    Architectures:
+      - arm64
+    Tracing: Active # https://docs.aws.amazon.com/lambda/latest/dg/lambda-x-ray.html
+
+Resources:
+  # Lambda Function
+  SpringCloudFunctionLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: none # Native runtime does not need a handler
+      CodeUri: .
+      Policies: AWSLambdaBasicExecutionRole
+      Events:
+        HttpApiEvent:
+          Type: HttpApi
+          Properties:
+            TimeoutInMillis: 20000
+            PayloadFormatVersion: '1.0'
+    Metadata:
+      BuildMethod: makefile # Instruct SAM how to build application.
+
+  # Lambda LogGroup
+  SpringCloudFunctionLambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ '/', [ '/aws/lambda', !Ref SpringCloudFunctionLambda ] ]
+      RetentionInDays: 30
+
+Outputs:
+  SpringCloudFunctionLambda:
+    Description: AWS Lambda Spring Cloud Function
+    Value: !Sub 'https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+    Export:
+      Name: SpringCloudFunctionLambda
