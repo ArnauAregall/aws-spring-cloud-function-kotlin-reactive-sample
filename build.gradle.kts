@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "3.1.1"
+	id("org.springframework.boot") version "3.1.4"
 	id("io.spring.dependency-management") version "1.1.0"
 	id("org.graalvm.buildtools.native") version "0.9.23"
 	kotlin("jvm") version "1.8.22"
@@ -17,15 +17,17 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url = uri("https://repo.spring.io/milestone") }
+	maven { url = uri("https://repo.spring.io/snapshot") }
 }
 
-extra["springCloudVersion"] = "2022.0.3"
+extra["springCloudVersion"] = "2023.0.0-SNAPSHOT"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	implementation("org.springframework.cloud:spring-cloud-function-context")
-	implementation("org.springframework.cloud:spring-cloud-function-web")
-	implementation("org.springframework.cloud:spring-cloud-function-adapter-aws")
+	implementation("org.springframework.cloud:spring-cloud-function-context:4.0.5-SNAPSHOT")
+	implementation("org.springframework.cloud:spring-cloud-function-web:4.0.5-SNAPSHOT")
+	implementation("org.springframework.cloud:spring-cloud-function-adapter-aws:4.0.5-SNAPSHOT")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
